@@ -66,7 +66,7 @@ def receive_log(
     return db_log
 
 
-@app.get("/logs", status_code=status.HTTP_200_OK)
+@app.get("/logs", response_model=list[LogResponse], status_code=status.HTTP_200_OK)
 def list_logs(
     skip: int = 0,
     limit: int = 50,
