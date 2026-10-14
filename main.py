@@ -28,6 +28,7 @@ DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "")
 
 def send_discord_alert(service: str, level: str, message: str) -> None:
     if not DISCORD_WEBHOOK_URL:
+        logger.warning("DISCORD_WEBHOOK_URL não configurada no .env!")
         return
 
     payload = {
@@ -39,7 +40,8 @@ def send_discord_alert(service: str, level: str, message: str) -> None:
         )
     }
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=5)
+        logger.info(f"Resposta do Discord: {response.status_code}")
     except requests.RequestException as e:
         logger.error("Erro ao enviar alerta para o Discord: %s", e)
 
