@@ -61,9 +61,10 @@ def receive_log(
     db.commit()
     db.refresh(db_log)
 
-    # 2. Analisa a severidade e dispara alerta imediato se for erro ou crítico
-    if log.level.upper() in ["ERROR", "CRITICAL"]:
-        send_discord_alert(log.service_name, log.level, log.message)
+    # 2. Converte para maiúsculo e valida de forma ampla para disparar no Discord
+    level_upper = log.level.upper().strip()
+    if level_upper in ["ERROR", "CRITICAL", "WARN", "WARNING"]:
+        send_discord_alert(db_log.service_name, db_log.level, db_log.message)
 
     return db_log
 
